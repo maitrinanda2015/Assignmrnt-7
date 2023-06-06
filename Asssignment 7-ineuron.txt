@@ -1,0 +1,381 @@
+<aside>
+💡 **1**
+
+Given two strings s and t, *determine if they are isomorphic*.
+
+Two strings s and t are isomorphic if the characters in s can be replaced to get t.
+
+All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.
+
+**Example 1:**
+
+**Input:** s = "egg", t = "add"
+
+**Output:** true
+
+ans-:
+public class IsomorphicStrings {
+    public static boolean isIsomorphic(String s, String t) {
+        if (s.length() != t.length()) {
+            return false;
+        }
+        
+        // Maps characters from s to corresponding characters in t
+        int[] sToT = new int[256];
+        
+        // Maps characters from t to corresponding characters in s
+        int[] tToS = new int[256];
+        
+        for (int i = 0; i < s.length(); i++) {
+            char chS = s.charAt(i);
+            char chT = t.charAt(i);
+            
+            if (sToT[chS] == 0 && tToS[chT] == 0) {
+                // New mapping
+                sToT[chS] = chT;
+                tToS[chT] = chS;
+            } else if (sToT[chS] != chT || tToS[chT] != chS) {
+                // Mapping mismatch
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    public static void main(String[] args) {
+        String s = "egg";
+        String t = "add";
+        System.out.println(isIsomorphic(s, t)); // Output: true
+    }
+}
+
+💡 **2**
+
+Given a string num which represents an integer, return true *if* num *is a **strobogrammatic number***.
+
+A **strobogrammatic number** is a number that looks the same when rotated 180 degrees (looked at upside down).
+
+**Example 1:**
+
+**Input:** num = "69"
+
+**Output:**
+
+true
+
+ans-:
+public class StrobogrammaticNumber {
+    public static boolean isStrobogrammatic(String num) {
+        int left = 0;
+        int right = num.length() - 1;
+        
+        while (left <= right) {
+            char chLeft = num.charAt(left);
+            char chRight = num.charAt(right);
+            
+            if (!isStrobogrammaticPair(chLeft, chRight)) {
+                return false;
+            }
+            
+            left++;
+            right--;
+        }
+        
+        return true;
+    }
+    
+    private static boolean isStrobogrammaticPair(char ch1, char ch2) {
+        switch (ch1) {
+            case '0':
+                return ch2 == '0';
+            case '1':
+                return ch2 == '1';
+            case '6':
+                return ch2 == '9';
+            case '8':
+                return ch2 == '8';
+            case '9':
+                return ch2 == '6';
+            default:
+                return false;
+        }
+    }
+    
+    public static void main(String[] args) {
+        String num = "69";
+        System.out.println(isStrobogrammatic(num)); // Output: true
+    }
+}
+<aside>
+💡  **3**
+
+Given two non-negative integers, num1 and num2 represented as string, return *the sum of* num1 *and* num2 *as a string*.
+
+You must solve the problem without using any built-in library for handling large integers (such as BigInteger). You must also not convert the inputs to integers directly.
+
+**Example 1:**
+
+**Input:** num1 = "11", num2 = "123"
+
+**Output:**
+
+"134"
+
+ans-:
+public class AddStrings {
+    public static String addStrings(String num1, String num2) {
+        StringBuilder sb = new StringBuilder();
+        
+        int carry = 0;
+        int i = num1.length() - 1;
+        int j = num2.length() - 1;
+        
+        while (i >= 0 || j >= 0 || carry > 0) {
+            int digit1 = (i >= 0) ? num1.charAt(i--) - '0' : 0;
+            int digit2 = (j >= 0) ? num2.charAt(j--) - '0' : 0;
+            
+            int sum = digit1 + digit2 + carry;
+            carry = sum / 10;
+            int digit = sum % 10;
+            
+            sb.append(digit);
+        }
+        
+        return sb.reverse().toString();
+    }
+    
+    public static void main(String[] args) {
+        String num1 = "11";
+        String num2 = "123";
+        System.out.println(addStrings(num1, num2)); // Output: "134"
+    }
+}
+<aside>
+💡 **4**
+
+Given a string s, reverse the order of characters in each word within a sentence while still preserving whitespace and initial word order.
+
+**Example 1:**
+
+**Input:** s = "Let's take LeetCode contest"
+
+**Output:** "s'teL ekat edoCteeL tsetnoc"
+
+ans-:
+public class ReverseWordsInString {
+    public static String reverseWords(String s) {
+        String[] words = s.split(" ");
+        StringBuilder sb = new StringBuilder();
+        
+        for (int i = 0; i < words.length; i++) {
+            sb.append(reverseWord(words[i]));
+            
+            if (i < words.length - 1) {
+                sb.append(" ");
+            }
+        }
+        
+        return sb.toString();
+    }
+    
+    private static String reverseWord(String word) {
+        char[] chars = word.toCharArray();
+        int left = 0;
+        int right = chars.length - 1;
+        
+        while (left < right) {
+            char temp = chars[left];
+            chars[left] = chars[right];
+            chars[right] = temp;
+            
+            left++;
+            right--;
+        }
+        
+        return new String(chars);
+    }
+    
+    public static void main(String[] args) {
+        String s = "Let's take LeetCode contest";
+        System.out.println(reverseWords(s)); // Output: "s'teL ekat edoCteeL tsetnoc"
+    }
+}
+<aside>
+💡  **5**
+
+Given a string s and an integer k, reverse the first k characters for every 2k characters counting from the start of the string.
+
+If there are fewer than k characters left, reverse all of them. If there are less than 2k but greater than or equal to k characters, then reverse the first k characters and leave the other as original.
+
+**Example 1:**
+
+**Input:** s = "abcdefg", k = 2
+
+**Output:**
+
+"bacdfeg"
+
+ans-:
+public class ReverseStringII {
+    public static String reverseStr(String s, int k) {
+        char[] chars = s.toCharArray();
+        int n = chars.length;
+        
+        for (int i = 0; i < n; i += 2 * k) {
+            int left = i;
+            int right = Math.min(i + k - 1, n - 1);
+            
+            while (left < right) {
+                char temp = chars[left];
+                chars[left] = chars[right];
+                chars[right] = temp;
+                
+                left++;
+                right--;
+            }
+        }
+        
+        return new String(chars);
+    }
+    
+    public static void main(String[] args) {
+        String s = "abcdefg";
+        int k = 2;
+        System.out.println(reverseStr(s, k)); // Output: "bacdfeg"
+    }
+}
+<aside>
+💡  **6**
+
+Given two strings s and goal, return true *if and only if* s *can become* goal *after some number of **shifts** on* s.
+
+A **shift** on s consists of moving the leftmost character of s to the rightmost position.
+
+- For example, if s = "abcde", then it will be "bcdea" after one shift.
+
+**Example 1:**
+
+**Input:** s = "abcde", goal = "cdeab"
+
+**Output:**
+
+true
+
+ans-:
+public class RotateString {
+    public static boolean rotateString(String s, String goal) {
+        if (s.length() != goal.length()) {
+            return false;
+        }
+        
+        String doubledS = s + s;
+        return doubledS.contains(goal);
+    }
+    
+    public static void main(String[] args) {
+        String s = "abcde";
+        String goal = "cdeab";
+        System.out.println(rotateString(s, goal)); // Output: true
+    }
+}
+<aside>
+💡 **7**
+
+Given two strings s and t, return true *if they are equal when both are typed into empty text editors*. '#' means a backspace character.
+
+Note that after backspacing an empty text, the text will continue empty.
+
+**Example 1:**
+
+**Input:** s = "ab#c", t = "ad#c"
+
+**Output:** true
+
+**Explanation:**
+
+Both s and t become "ac".
+
+ans-:
+public class BackspaceStringCompare {
+    public static boolean backspaceCompare(String s, String t) {
+        String processedS = processBackspaces(s);
+        String processedT = processBackspaces(t);
+        
+        return processedS.equals(processedT);
+    }
+    
+    private static String processBackspaces(String str) {
+        StringBuilder sb = new StringBuilder();
+        
+        for (char c : str.toCharArray()) {
+            if (c == '#') {
+                if (sb.length() > 0) {
+                    sb.deleteCharAt(sb.length() - 1);
+                }
+            } else {
+                sb.append(c);
+            }
+        }
+        
+        return sb.toString();
+    }
+    
+    public static void main(String[] args) {
+        String s = "ab#c";
+        String t = "ad#c";
+        System.out.println(backspaceCompare(s, t)); // Output: true
+    }
+}
+<aside>
+💡 **8**
+
+You are given an array coordinates, coordinates[i] = [x, y], where [x, y] represents the coordinate of a point. Check if these points make a straight line in the XY plane.
+
+**Input:** coordinates = [[1,2],[2,3],[3,4],[4,5],[5,6],[6,7]]
+
+**Output:** true
+
+ans-:
+
+public class CheckStraightLine {
+    public static boolean checkStraightLine(int[][] coordinates) {
+        if (coordinates.length <= 2) {
+            return true;
+        }
+        
+        int x0 = coordinates[0][0];
+        int y0 = coordinates[0][1];
+        int x1 = coordinates[1][0];
+        int y1 = coordinates[1][1];
+        
+        for (int i = 2; i < coordinates.length; i++) {
+            int x = coordinates[i][0];
+            int y = coordinates[i][1];
+            
+            if ((y1 - y0) * (x - x0) != (y - y0) * (x1 - x0)) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    public static void main(String[] args) {
+        int[][] coordinates = {{1, 2}, {2, 3}, {3, 4}, {4, 5}, {5, 6}, {6, 7}};
+        System.out.println(checkStraightLine(coordinates)); // Output: true
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
